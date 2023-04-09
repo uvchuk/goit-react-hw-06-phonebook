@@ -1,4 +1,11 @@
-export const Contact = ({ contacts, removeContact }) => {
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { removeContact } from 'redux/phoneBookSlice';
+
+export const Contact = () => {
+  const contacts = useSelector(state => state.phoneBook.contacts);
+  const dispatch = useDispatch();
+
   return contacts.map(({ id, name, number }) => (
     <li key={id}>
       <span>
@@ -6,7 +13,7 @@ export const Contact = ({ contacts, removeContact }) => {
       </span>
       <button
         onClick={() => {
-          removeContact(id);
+          dispatch(removeContact(id));
         }}
         type="button"
       >
