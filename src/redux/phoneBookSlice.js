@@ -25,6 +25,7 @@ const phoneBookSlice = createSlice({
         contact => contact.id === action.payload
       );
       state.contacts.splice(contactIndex, 1);
+      if (state.contacts.length === 0) state.filter = '';
     },
     filterContact(state, action) {
       if (action.payload.trim() === '') state.filter = '';
