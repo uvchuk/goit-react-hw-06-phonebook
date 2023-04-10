@@ -9,9 +9,7 @@ export const Filter = () => {
       <input
         name="filter"
         type="text"
-        onChange={evt => {
-          dispatch(filterContact(evt.target.value));
-        }}
+        onChange={evt => dispatch(filterContact(evt.target.value))}
       />
     </label>
   );
