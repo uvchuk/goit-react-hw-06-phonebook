@@ -4,7 +4,7 @@ import storage from 'redux-persist/lib/storage';
 
 const phoneBookSlice = createSlice({
   name: 'phoneBook',
-  initialState: { contacts: [] },
+  initialState: { contacts: [], filtered: null },
   reducers: {
     addContact: {
       reducer(state, action) {
@@ -21,10 +21,24 @@ const phoneBookSlice = createSlice({
       },
     },
     removeContact(state, action) {
-      const index = state.contacts.findIndex(
+      const contactIndex = state.contacts.findIndex(
         contact => contact.id === action.payload
       );
-      state.contacts.splice(index, 1);
+      state.contacts.splice(contactIndex, 1);
+
+      if (state.filtered) {
+        const filteredIndex = state.filtered.findIndex(
+          contact => contact.id === action.payload
+        );
+        state.filtered.splice(filteredIndex, 1);
+      }
+    },
+    filterContact(state, action) {
+      if (action.payload.trim() === '') state.filtered = null;
+      else
+        state.filtered = state.contacts.filter(contact =>
+          contact.name.toLowerCase().includes(action.payload.toLowerCase())
+        );
     },
   },
 });
@@ -32,7 +46,7 @@ const phoneBookSlice = createSlice({
 const persistConfig = {
   key: 'phoneBook',
   storage,
-  whitelist: ['phoneBook'],
+  whitelist: ['contacts'],
 };
 
 export const phoneBookReducer = persistReducer(
@@ -40,7 +54,8 @@ export const phoneBookReducer = persistReducer(
   phoneBookSlice.reducer
 );
 
-export const { addContact, removeContact } = phoneBookSlice.actions;
+export const { addContact, removeContact, filterContact } =
+  phoneBookSlice.actions;
 
-// Selectors
-// export const getContactsValue = state => state.contacts.value;
+export const useContacts = state => state.phoneBook.contacts;
+export const useFiltered = state => state.phoneBook.filtered;

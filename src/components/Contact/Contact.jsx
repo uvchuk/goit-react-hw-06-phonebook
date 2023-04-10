@@ -1,12 +1,13 @@
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { removeContact } from 'redux/phoneBookSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeContact, useContacts, useFiltered } from 'redux/phoneBookSlice';
 
 export const Contact = () => {
-  const contacts = useSelector(state => state.phoneBook.contacts);
   const dispatch = useDispatch();
+  const contacts = useSelector(useContacts);
+  const filtered = useSelector(useFiltered);
+  const contactsToShow = filtered ? filtered : contacts;
 
-  return contacts.map(({ id, name, number }) => (
+  return contactsToShow.map(({ id, name, number }) => (
     <li key={id}>
       <span>
         {name}: {number}
